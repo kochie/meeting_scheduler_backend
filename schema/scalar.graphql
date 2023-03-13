@@ -1,0 +1,3 @@
+scalar AWSDate
+scalar AWSTime
+scalar AWSDateTime

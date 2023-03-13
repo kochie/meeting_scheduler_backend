@@ -1,7 +1,83 @@
-type Query {
-  
+type Appointment {
+  startTime: AWSDateTime
+  endTime: AWSDateTime
+}
+
+type Days {
+  monday: [TimeSlot]
+  tuesday: [TimeSlot]
+  wednesday: [TimeSlot]
+  thursday: [TimeSlot]
+  friday: [TimeSlot]
+  saturday: [TimeSlot]
+  sunday: [TimeSlot]
+}
+
+input DaysInput {
+  monday: [TimeSlotInput]
+  tuesday: [TimeSlotInput]
+  wednesday: [TimeSlotInput]
+  thursday: [TimeSlotInput]
+  friday: [TimeSlotInput]
+  saturday: [TimeSlotInput]
+  sunday: [TimeSlotInput]
+}
+
+input ProfileInput {
+  name: String
+  email: String
+  phone: String
+  username: String
+  timezone: String
 }
 
 type Mutation {
-  setFastmailToken(token: String!): Boolean  
+  setFastmailToken(token: String!): Boolean
+  setSchedule(userId: String, schedule: ScheduleInput): Schedule
+  makeAppointment(
+    startTime: AWSDateTime
+    endTime: AWSDateTime
+    userId: String
+  ): Appointment
+  setProfile(userId: String, profile: ProfileInput): Profile
+}
+
+type Profile {
+  userId: String
+  name: String
+  email: String
+  phone: String
+  username: String
+  timezone: String
+}
+
+type Query {
+  getAvailableAppointments(
+    date: AWSDate
+    userId: String
+    tz: String
+  ): [Appointment]
+  getProfile(userId: String): Profile
+  getSchedule(userId: String, username: String): Schedule
+  getPublicProfile(username: String): Profile
+}
+
+type Schedule {
+  userId: String
+  username: String
+  days: Days
+}
+
+input ScheduleInput {
+  days: DaysInput
+}
+
+type TimeSlot {
+  startTime: AWSTime
+  endTime: AWSTime
+}
+
+input TimeSlotInput {
+  startTime: AWSTime
+  endTime: AWSTime
 }

@@ -1,0 +1,22 @@
+{
+    "version" : "2017-02-28",
+    #if(!$util.isNullOrEmpty($ctx.args.userId))
+    "operation" : "GetItem",
+    "key" : {
+        "userId" : $util.dynamodb.toDynamoDBJson($ctx.args.userId),
+    }
+    #elseif(!$util.isNullOrEmpty($ctx.args.username))
+    "operation" : "Query",
+    "query" : {
+        "expression" : "#username = :username",
+        "expressionValues" : {
+            ":username" : $util.dynamodb.toDynamoDBJson($ctx.args.username) 
+        },
+        "expressionNames": {
+        	"#username": "username"
+        }
+    },
+    "index" : "usernameIndex"
+    #else
+    #end
+}

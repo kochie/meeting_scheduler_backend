@@ -1,0 +1,6 @@
+#if(!$util.isNullOrEmpty($ctx.args.userId))
+    $util.toJson($ctx.result)
+#elseif(!$util.isNullOrEmpty($ctx.args.username))
+    $util.toJson($ctx.result.items[0])
+#else
+#end
