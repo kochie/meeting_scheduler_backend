@@ -261,6 +261,27 @@ export class MeetingSchedulerBackendStack extends cdk.Stack {
       responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
     });
 
+    const presignerLambda = new NodejsFunction(this, "presignerLambda", {
+      entry: "src/lambda/getPresignUploadUrl.ts",
+      environment: {
+        BUCKET_NAME: bucket.bucketName,
+      },
+      timeout: Duration.seconds(30),
+    });
+    bucket.grantReadWrite(presignerLambda);
+    const presignerDS = api.addLambdaDataSource(
+      "presignerDataSource",
+      presignerLambda
+    );
+    presignerDS.createResolver("presignerUploadResolver", {
+      fieldName: "getPresignUploadUrl",
+      typeName: "Query",
+    });
+    presignerDS.createResolver("presignerDownloadResolver", {
+      fieldName: "getPresignDownloadUrl",
+      typeName: "Query",
+    });
+
     new CfnOutput(this, "GraphQLAPIURL", {
       value: api.graphqlUrl,
     });

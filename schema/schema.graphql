@@ -29,17 +29,18 @@ input ProfileInput {
   phone: String
   username: String
   timezone: String
+  about: String
 }
 
 type Mutation {
   setFastmailToken(token: String!): Boolean
   setSchedule(userId: String, schedule: ScheduleInput): Schedule
   makeAppointment(
-    startTime: AWSDateTime
-    endTime: AWSDateTime
-    userId: String
+    startTime: AWSDateTime!
+    endTime: AWSDateTime!
+    userId: String!
   ): Appointment
-  setProfile(userId: String, profile: ProfileInput): Profile
+  setProfile(userId: String!, profile: ProfileInput!): Profile
 }
 
 type Profile {
@@ -49,17 +50,20 @@ type Profile {
   phone: String
   username: String
   timezone: String
+  about: String
 }
 
 type Query {
   getAvailableAppointments(
-    date: AWSDate
-    userId: String
+    date: AWSDate!
+    userId: String!
     tz: String
   ): [Appointment]
-  getProfile(userId: String): Profile
+  getProfile(userId: String!): Profile
   getSchedule(userId: String, username: String): Schedule
-  getPublicProfile(username: String): Profile
+  getPublicProfile(username: String!): Profile
+  getPresignDownloadUrl(userId: String, username: String, key: String!): AWSURL
+  getPresignUploadUrl(userId: String!, key: String!): AWSURL
 }
 
 type Schedule {
